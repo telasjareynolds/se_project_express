@@ -6,16 +6,17 @@ const { checkErrors } = require("../utils/errors");
 //creates item
 const createClothingItem = (req, res) => {
   const { name, weather, imageURL } = req.body;
+  console.log(req.user);
   const owner = req.user._id;
-  console.log("Request body:", req.body);
-  console.log("User ID:", req.user._id);
+  // console.log("Request body:", req.body);
+  // console.log("User ID:", req.user._id);
 
   ClothingItem.create({ name, weather, imageURL, owner })
     .then((item) => {
-      return res.send({ data: item });
+      return res.send({ item });
     })
     .catch((err) => {
-      checkErrors(err, res);
+      checkErrors(err);
     });
 };
 
@@ -26,7 +27,7 @@ const getClothingItems = (req, res) => {
       return res.send({ data: items });
     })
     .catch((err) => {
-      checkErrors(err, res);
+      checkErrors(err);
     });
 };
 
@@ -42,11 +43,11 @@ const updateClothingItem = (req, res) => {
       if (!item) {
         return res.status(404).send({ message: "Item not found" });
       }
-      return res.send({ data: item });
+      return res.send({ item });
     })
 
     .catch((err) => {
-      checkErrors(err, res);
+      checkErrors(err);
     });
 };
 
@@ -60,7 +61,7 @@ const deleteClothingItem = (req, res) => {
       throw error;
     })
     .then((item) => {
-      return res.send({ data: item });
+      return res.send({ item });
     })
 
     .catch((err) => {
@@ -85,7 +86,7 @@ const likeClothingItem = (req, res) => {
       throw error;
     })
     .then((item) => {
-      return res.send({ data: item });
+      return res.send({ item });
     })
 
     .catch((err) => {
@@ -108,7 +109,7 @@ const dislikeClothingItem = (req, res) => {
       throw error;
     })
     .then((item) => {
-      return res.send({ data: item });
+      return res.send({ item });
     })
 
     .catch((err) => {

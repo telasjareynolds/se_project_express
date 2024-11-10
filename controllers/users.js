@@ -7,9 +7,9 @@ const createUser = (req, res) => {
 
   User.create({ name, avatar })
     .then((user) => {
-      return res.send({ data: user });
+      return res.send({ user });
     })
-    .catch((err) => checkErrors(err, res));
+    .catch((err) => checkErrors(err));
 };
 
 //Returns all users
@@ -19,10 +19,10 @@ const getUsers = (req, res) => {
       if (users.length === 0) {
         return res.status(404).send({ message: "No users found" });
       }
-      return res.send({ data: users });
+      return res.send({ users });
     })
     .catch((err) => {
-      checkErrors(err, res);
+      checkErrors(err);
     });
 };
 
@@ -36,11 +36,11 @@ const getUser = (req, res) => {
       throw error;
     })
     .then((user) => {
-      return res.send({ data: user });
+      return res.send({ user });
     })
 
     .catch((err) => {
-      checkErrors(err, res);
+      checkErrors(err);
     });
 };
 

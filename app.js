@@ -12,13 +12,20 @@ mongoose.connect(
 );
 
 app.use(express.json());
-app.use("/", indexRouter);
-app.use((req, res, next) => {
+const authMiddleware = (req, res, next) => {
   req.user = {
-    _id: "672fcf0e8e1c364372526e91"
+    _id: "672fcf0e8e1c364372526e91",
   };
   next();
-});
+};
+app.use("/", authMiddleware, indexRouter);
+
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: "672fcf0e8e1c364372526e91",
+//   };
+//   next();
+// });
 
 const { PORT = 3001 } = process.env;
 
