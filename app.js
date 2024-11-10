@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 
 mongoose.connect(
-  "mongodb://127.0.0.1:27017/wtwr_db",
+  "mongodb:// 127.0.0.1:27017/wtwr_db",
   () => {
     console.log("connected to DB");
   },

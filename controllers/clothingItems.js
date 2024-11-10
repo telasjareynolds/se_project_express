@@ -1,32 +1,25 @@
 const ClothingItem = require("../models/clothingItem");
+
 const { checkErrors } = require("../utils/errors");
 
-//Implement CRUD
-//creates item
+// Implement CRUD
+// creates item
 const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
   ClothingItem.create({ name, weather, imageUrl, owner })
-    .then((item) => {
-      return res.send({ item });
-    })
-    .catch((err) => {
-      checkErrors(err, res);
-    });
+    .then((item) => res.send({ item }))
+    .catch((err) => checkErrors(err, res));
 };
 
-//reads all items
+// reads all items
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => {
-      return res.send({ data: items });
-    })
-    .catch((err) => {
-      checkErrors(err, res);
-    });
+    .then((items) => res.send({ data: items }))
+    .catch((err) => checkErrors(err, res));
 };
 
-//updates item
+// updates item
 const updateClothingItem = (req, res) => {
   const { itemId } = req.params;
   const data = req.body;
@@ -41,12 +34,10 @@ const updateClothingItem = (req, res) => {
       return res.send({ item });
     })
 
-    .catch((err) => {
-      checkErrors(err, res);
-    });
+    .catch((err) => checkErrors(err, res));
 };
 
-//deletes item
+// deletes item
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndRemove(itemId)
@@ -55,16 +46,12 @@ const deleteClothingItem = (req, res) => {
       error.statusCode = 404;
       throw error;
     })
-    .then((item) => {
-      return res.send({ item });
-    })
+    .then((item) => res.send({ item }))
 
-    .catch((err) => {
-      checkErrors(err, res);
-    });
+    .catch((err) => checkErrors(err, res));
 };
 
-// like the clothing item
+//  like the clothing item
 const likeClothingItem = (req, res) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndUpdate(
@@ -79,13 +66,9 @@ const likeClothingItem = (req, res) => {
       error.statusCode = 404;
       throw error;
     })
-    .then((item) => {
-      return res.send({ item });
-    })
+    .then((item) => res.send({ item }))
 
-    .catch((err) => {
-      checkErrors(err, res);
-    });
+    .catch((err) => checkErrors(err, res));
 };
 
 const dislikeClothingItem = (req, res) => {
@@ -102,13 +85,9 @@ const dislikeClothingItem = (req, res) => {
       error.statusCode = 404;
       throw error;
     })
-    .then((item) => {
-      return res.send({ item });
-    })
+    .then((item) => res.send({ item }))
 
-    .catch((err) => {
-      checkErrors(err, res);
-    });
+    .catch((err) => checkErrors(err, res));
 };
 
 module.exports = {

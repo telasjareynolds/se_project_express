@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/telasjareynolds/se_project_express.git"
+    "url": "git+https://  github.com/telasjareynolds/se_project_express.git"
   },
   "author": "Telasja Reynolds",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/telasjareynolds/se_project_express/issues"
+    "url": "https://  github.com/telasjareynolds/se_project_express/issues"
   },
-  "homepage": "https://github.com/telasjareynolds/se_project_express#readme",
+  "homepage": "https://  github.com/telasjareynolds/se_project_express#readme",
   "dependencies": {
     "express": "^4.21.1",
     "mongoose": "^6.13.3",
