@@ -1,7 +1,5 @@
 const User = require("../models/user");
-const {
-  checkErrors
-} = require("../utils/errors");
+const { checkErrors } = require("../utils/errors");
 
 //Creates a user
 const createUser = (req, res) => {

@@ -10,7 +10,7 @@ function checkErrors(err, res) {
     err.name === "DocumentNotFoundError"
   ) {
     return res.status(404).send({ message: err.message });
-  } else if ( err.statusCode === 404) {
+  } else if (err.statusCode === 404) {
     return res.status(404).send({ message: err.message });
   } else if (err.name === "UnauthorizedError") {
     return res.status(401).send({ message: err.message });
