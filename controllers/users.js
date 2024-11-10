@@ -1,5 +1,7 @@
 const User = require("../models/user");
-const { checkErrors } = require("../utils/errors");
+const {
+  checkErrors
+} = require("../utils/errors");
 
 //Creates a user
 const createUser = (req, res) => {
@@ -9,7 +11,7 @@ const createUser = (req, res) => {
     .then((user) => {
       return res.send({ user });
     })
-    .catch((err) => checkErrors(err));
+    .catch((err) => checkErrors(err, res));
 };
 
 //Returns all users
@@ -22,7 +24,7 @@ const getUsers = (req, res) => {
       return res.send({ users });
     })
     .catch((err) => {
-      checkErrors(err);
+      checkErrors(err, res);
     });
 };
 
@@ -30,17 +32,14 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
-    .orFail(() => {
-      const error = new Error("User not found");
-      error.statusCode = 404;
-      throw error;
-    })
+    .orFail()
     .then((user) => {
       return res.send({ user });
     })
 
     .catch((err) => {
-      checkErrors(err);
+      console.log(res.status);
+      checkErrors(err, res);
     });
 };
 

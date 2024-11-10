@@ -1,22 +1,22 @@
 const ClothingItem = require("../models/clothingItem");
-const { checkErrors } = require("../utils/errors");
+const {checkErrors} = require("../utils/errors");
 
 //Implement CRUD
 
 //creates item
 const createClothingItem = (req, res) => {
-  const { name, weather, imageURL } = req.body;
-  console.log(req.user);
+  const { name, weather, imageUrl } = req.body;
+
   const owner = req.user._id;
   // console.log("Request body:", req.body);
   // console.log("User ID:", req.user._id);
 
-  ClothingItem.create({ name, weather, imageURL, owner })
+  ClothingItem.create({ name, weather, imageUrl, owner })
     .then((item) => {
       return res.send({ item });
     })
     .catch((err) => {
-      checkErrors(err);
+      checkErrors(err, res);
     });
 };
 
@@ -27,7 +27,7 @@ const getClothingItems = (req, res) => {
       return res.send({ data: items });
     })
     .catch((err) => {
-      checkErrors(err);
+      checkErrors(err, res);
     });
 };
 
@@ -47,7 +47,7 @@ const updateClothingItem = (req, res) => {
     })
 
     .catch((err) => {
-      checkErrors(err);
+      checkErrors(err, res);
     });
 };
 
