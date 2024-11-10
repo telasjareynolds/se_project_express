@@ -19,24 +19,6 @@ const getClothingItems = (req, res) => {
     .catch((err) => checkErrors(err, res));
 };
 
-// updates item
-const updateClothingItem = (req, res) => {
-  const { itemId } = req.params;
-  const data = req.body;
-  ClothingItem.findByIdAndUpdate(itemId, data, {
-    new: true,
-    runValidators: true,
-  })
-    .then((item) => {
-      if (!item) {
-        return res.status(404).send({ message: "Item not found" });
-      }
-      return res.send({ item });
-    })
-
-    .catch((err) => checkErrors(err, res));
-};
-
 // deletes item
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
@@ -92,7 +74,6 @@ const dislikeClothingItem = (req, res) => {
 
 module.exports = {
   deleteClothingItem,
-  updateClothingItem,
   createClothingItem,
   getClothingItems,
   likeClothingItem,

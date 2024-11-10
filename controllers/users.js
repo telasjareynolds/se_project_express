@@ -13,12 +13,7 @@ const createUser = (req, res) => {
 // Returns all users
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => {
-      if (users.length === 0) {
-        return res.status(404).send({ message: "No users found" });
-      }
-      return res.send({ users });
-    })
+    .then((users) => res.send({ users }))
     .catch((err) => checkErrors(err, res));
 };
 

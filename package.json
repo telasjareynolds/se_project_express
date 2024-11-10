@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint",
+    "lint": "npx eslint .",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
@@ -20,9 +20,15 @@
   },
   "homepage": "https://  github.com/telasjareynolds/se_project_express#readme",
   "dependencies": {
+    "directory-tree": "^3.5.2",
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "helmet": "^8.0.0",
+    "i18next": "^23.16.5",
     "mongoose": "^6.13.3",
-    "validator": "^13.12.0"
+    "shelljs": "^0.8.5",
+    "validator": "^13.12.0",
+    "wait-port": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "^8.57.1",

@@ -1,9 +1,16 @@
 # WTWR (What to Wear?): Back End
-The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
-## Running the Project
-`npm run start` — to launch the server 
+The WTWR (What to Wear) app helps users decide what to wear based on current weather conditions. By connecting to a weather API, WTWR provides live weather data and makes clothing recommendations tailored to the forecast. Users can also manage a personalized wardrobe within the app, adding or removing items, ensuring suggestions are relevant to their style and climate needs.
 
-`npm run dev` — to launch the server with the hot reload feature
+## Project Functionality
+Real-Time Weather Display: WTWR connects to a weather API to display up-to-date data on temperature, humidity, and conditions.
+Clothing Recommendations: Based on the weather, the app suggests appropriate clothing items.
+Wardrobe Management: Users can add, update, and delete items in their wardrobe, ensuring recommendations fit their style.
+User Profiles: Personalization features allow users to customize preferences, enhancing the relevance of recommendations.
+## Technologies Used
+## Backend
+Node.js and Express.js: WTWR’s backend is built on Node.js and Express, providing a fast, scalable server environment.
+MongoDB with Mongoose: MongoDB stores user data and wardrobe items, with Mongoose simplifying data management and validation.
+Weather API Integration: The app connects to a weather API to deliver current weather data specific to the user's location.
+RESTful API: The backend follows REST principles, supporting CRUD operations for user and wardrobe data.
+Error Handling: Comprehensive error handling ensures smooth, reliable functionality for users.
 
-### Testing
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12

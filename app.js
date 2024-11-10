@@ -1,12 +1,15 @@
 const express = require("express");
+const helmet = require("helmet");
+const mongoose = require("mongoose");
 
 const app = express();
-const mongoose = require("mongoose");
+
+app.use(helmet());
 
 const indexRouter = require("./routes/index");
 
 mongoose.connect(
-  "mongodb:// 127.0.0.1:27017/wtwr_db",
+  "mongodb://127.0.0.1:27017/wtwr_db",
   () => {
     console.log("connected to DB");
   },
@@ -21,6 +24,7 @@ const authMiddleware = (req, res, next) => {
   };
   next();
 };
+
 app.use("/", authMiddleware, indexRouter);
 
 const { PORT = 3001 } = process.env;

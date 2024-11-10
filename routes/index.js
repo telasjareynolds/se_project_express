@@ -9,7 +9,7 @@ router.use("/items", clothingItemRouter);
 
 router.use((err, res) => {
   console.error(err)
-  res.status(500).send({ message: "Requested resource not found" });
+  res.status(404).send({ message: err.message });
 });
 
 module.exports = router;

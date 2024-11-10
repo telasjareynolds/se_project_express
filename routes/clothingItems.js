@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const {
   deleteClothingItem,
-  updateClothingItem,
   createClothingItem,
   getClothingItems,
   likeClothingItem,
@@ -12,8 +11,6 @@ const {
 router.post("/", createClothingItem);
 
 router.get("/", getClothingItems);
-
-router.put("/:itemId", updateClothingItem);
 
 router.delete("/:itemId", deleteClothingItem);
 
