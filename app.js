@@ -1,6 +1,8 @@
 const express = require("express");
+
 const app = express();
 const mongoose = require("mongoose");
+
 const indexRouter = require("./routes/index");
 
 mongoose.connect(
