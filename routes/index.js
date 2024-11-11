@@ -7,9 +7,12 @@ router.use("/users", userRouter);
 router.use("/items", clothingItemRouter);
 
 
-router.use((err, res) => {
+router.use((err, req, res) => {
+  const NOT_FOUND = 404;
   console.error(err)
-  res.status(404).send({ message: err.message });
+
+  const statusCode = err.statusCode || NOT_FOUND;
+  res.status(statusCode).send({ message: "The requested resource was not found on the server. Please check your request and try again." });
 });
 
 module.exports = router;
