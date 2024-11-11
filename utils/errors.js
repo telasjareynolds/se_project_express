@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 function checkErrors(err, res) {
   console.error(err);
   if (err.name === "ValidationError" || err.name === "CastError") {
@@ -7,6 +9,9 @@ function checkErrors(err, res) {
     return res.status(409).send({ message: err.message });
   }
   if (err.statusCode === 404) {
+    return res.status(404).send({ message: err.message });
+  }
+  if (err instanceof mongoose.Error.DocumentNotFoundError) {
     return res.status(404).send({ message: err.message });
   }
   if (err.name === "UnauthorizedError") {
