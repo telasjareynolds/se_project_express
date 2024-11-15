@@ -23,14 +23,12 @@ const createUser = (req, res) => {
       }
       return bcrypt.hash(password, 10);
     })
-    .then((hash) =>
-      User.create({ name, avatar, email, password: hash })
-    )
-    .then((user) =>
-      res.send({
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
+    .then((user) => {
+      return res.send({
         user: { name: user.name, avatar: user.avatar, email: user.email },
-      })
-    )
+      });
+    })
     .catch((err) => checkErrors(err, res));
 };
 
@@ -67,7 +65,7 @@ const login = (req, res) => {
         expiresIn: "7d",
       });
 
-      res.send({ token });
+      return res.send({ token });
     })
     .catch((err) => checkErrors(err, res));
 };
@@ -78,11 +76,11 @@ const getCurrentUser = (req, res) => {
 
   User.findById(userId)
     .orFail()
-    .then((user) =>
-      res.send({
+    .then((user) => {
+      return res.send({
         user: { name: user.name, avatar: user.avatar, email: user.email },
-      })
-    )
+      });
+    })
     .catch((err) => {
       console.error(err);
       res
@@ -105,7 +103,7 @@ const modifyUserData = (req, res) => {
       if (!user) {
         return Promise.reject(new Error("User not found"));
       }
-      res.send({ user: { name: user.name, avatar: user.avatar } });
+      return res.send({ user: { name: user.name, avatar: user.avatar } });
     })
     .catch((err) => checkErrors(err, res));
 };
