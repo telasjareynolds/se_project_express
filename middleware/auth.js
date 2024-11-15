@@ -5,6 +5,7 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(401).send({ message: "Authorization required" });
+
   }
   const token = authorization.replace("Bearer ", "");
   let payload;
@@ -16,5 +17,5 @@ module.exports = (req, res, next) => {
     return res.status(401).send({ message: "Authorization required" });
   }
   req.user = payload;
-  next();
+  return next();
 };

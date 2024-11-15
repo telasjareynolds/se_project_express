@@ -13,7 +13,7 @@ const createUser = (req, res) => {
     return res.status(400).send({ message: error.message });
   }
 
-  User.findOne({ email })
+  return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
         // Email already exists, so throw an error that goes to catch
@@ -23,9 +23,7 @@ const createUser = (req, res) => {
       }
       return bcrypt.hash(password, 10);
     })
-    .then((hash) =>
-      User.create({ name, avatar, email, password: hash })
-    )
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) =>
       res.send({
         user: { name: user.name, avatar: user.avatar, email: user.email },
@@ -34,24 +32,7 @@ const createUser = (req, res) => {
     .catch((err) => checkErrors(err, res));
 };
 
-// // Returns all users
-// const getUsers = (req, res) => {
-//   User.find({})
-//     .then((users) => res.send({ users }))
-//     .catch((err) => checkErrors(err, res));
-// };
-
-// // Finds user by ID
-// const getUser = (req, res) => {
-//   const { userId } = req.params;
-//   User.findById(userId)
-//     .orFail()
-//     .then((user) => res.send({ user }))
-//     .catch((err) => checkErrors(err, res));
-// };
-
 // user login controller
-
 const login = (req, res) => {
   const { email, password } = req.body;
 
@@ -61,7 +42,7 @@ const login = (req, res) => {
     return res.status(400).send({ message: error.message });
   }
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
@@ -105,7 +86,7 @@ const modifyUserData = (req, res) => {
       if (!user) {
         return Promise.reject(new Error("User not found"));
       }
-      res.send({ user: { name: user.name, avatar: user.avatar } });
+     return res.send({ user: { name: user.name, avatar: user.avatar } });
     })
     .catch((err) => checkErrors(err, res));
 };

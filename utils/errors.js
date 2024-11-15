@@ -31,4 +31,6 @@ function checkErrors(err, res) {
   return res.status(500).send({ message: err.message });
 }
 
+// const DUPL
+
 module.exports = { checkErrors };
