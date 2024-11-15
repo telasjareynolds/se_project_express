@@ -19,7 +19,6 @@ function checkErrors(err, res) {
     return res.status(404).send({ message: err.message });
   }
   if (
-    err.name === "UnauthorizedError" ||
     err.name === "InvalidCredentialsError" ||
     err.message === "Incorrect email or password"
   ) {

@@ -1,6 +1,10 @@
 const ClothingItem = require("../models/clothingItem");
 
-const { checkErrors, NOT_FOUND } = require("../utils/errors");
+const {
+  checkErrors,
+  NOT_FOUND,
+  UNAUTHORIZED_ERROR,
+} = require("../utils/errors");
 
 // Implement CRUD
 // creates item
@@ -29,7 +33,7 @@ const deleteClothingItem = (req, res) => {
     .then((item) => {
       if (item.owner.toString() !== userId) {
         const error = new Error("Not authorized to delete item");
-        error.name = "UnauthorizedError";
+        error.statusCode = UNAUTHORIZED_ERROR;
         throw error;
       }
       return ClothingItem.findByIdAndRemove(itemId);
