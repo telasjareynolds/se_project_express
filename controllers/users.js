@@ -1,7 +1,12 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { checkErrors } = require("../utils/errors");
+const {
+  checkErrors,
+  DUPLICATE_REQUEST,
+  REQUIRED_FIELD,
+  SERVER_ERROR,
+} = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
 // Creates a user
@@ -9,8 +14,8 @@ const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
   if (!email || !password) {
     const error = new Error("Email and password are required");
-    error.statusCode = 400;
-    return res.status(400).send({ message: error.message });
+    error.statusCode = REQUIRED_FIELD;
+    return res.status(REQUIRED_FIELD).send({ message: error.message });
   }
 
   return User.findOne({ email })
@@ -18,7 +23,7 @@ const createUser = (req, res) => {
       if (existingUser) {
         // Email already exists, so throw an error that goes to catch
         const error = new Error("Email already exists");
-        error.statusCode = 409;
+        error.statusCode = DUPLICATE_REQUEST;
         throw error;
       }
       return bcrypt.hash(password, 10);
@@ -39,7 +44,7 @@ const login = (req, res) => {
   if (!email || !password) {
     const error = new Error("Email and password are required");
     error.name = "ValidatorError";
-    return res.status(400).send({ message: error.message });
+    return res.status(REQUIRED_FIELD).send({ message: error.message });
   }
 
   return User.findUserByCredentials(email, password)
@@ -67,7 +72,7 @@ const getCurrentUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       res
-        .status(500)
+        .status(SERVER_ERROR)
         .send({ message: "An error occurred while retrieving user data" });
     });
 };
@@ -82,12 +87,9 @@ const modifyUserData = (req, res) => {
     runValidators: true,
   })
     .orFail()
-    .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error("User not found"));
-      }
-     return res.send({ user: { name: user.name, avatar: user.avatar } });
-    })
+    .then((user) =>
+      res.send({ user: { name: user.name, avatar: user.avatar } })
+    )
     .catch((err) => checkErrors(err, res));
 };
 

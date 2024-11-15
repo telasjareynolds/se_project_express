@@ -1,6 +1,6 @@
 const ClothingItem = require("../models/clothingItem");
 
-const { checkErrors } = require("../utils/errors");
+const { checkErrors, NOT_FOUND } = require("../utils/errors");
 
 // Implement CRUD
 // creates item
@@ -29,7 +29,7 @@ const deleteClothingItem = (req, res) => {
     .then((item) => {
       if (item.owner.toString() !== userId) {
         const error = new Error("Not authorized to delete item");
-        error.statusCode = 403;
+        error.name = "UnauthorizedError";
         throw error;
       }
       return ClothingItem.findByIdAndRemove(itemId);
@@ -50,7 +50,7 @@ const likeClothingItem = (req, res) => {
   )
     .orFail(() => {
       const error = new Error("Item ID not found");
-      error.statusCode = 404;
+      error.statusCode = NOT_FOUND;
       throw error;
     })
     .then((item) => res.send({ item }))
@@ -69,7 +69,7 @@ const dislikeClothingItem = (req, res) => {
   )
     .orFail(() => {
       const error = new Error("Item ID not found");
-      error.statusCode = 404;
+      error.statusCode = NOT_FOUND;
       throw error;
     })
     .then((item) => res.send({ item }))
