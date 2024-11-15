@@ -7,8 +7,8 @@ const { JWT_SECRET } = require("../utils/config");
 // Creates a user
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
-  if (!email) {
-    const error = new Error("Email is required");
+  if (!email || !password) {
+    const error = new Error("Email and password are required");
     error.statusCode = 400;
     return res.status(400).send({ message: error.message });
   }
@@ -23,12 +23,14 @@ const createUser = (req, res) => {
       }
       return bcrypt.hash(password, 10);
     })
-    .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then((user) => {
-      return res.send({
+    .then((hash) =>
+      User.create({ name, avatar, email, password: hash })
+    )
+    .then((user) =>
+      res.send({
         user: { name: user.name, avatar: user.avatar, email: user.email },
-      });
-    })
+      })
+    )
     .catch((err) => checkErrors(err, res));
 };
 
@@ -54,7 +56,7 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    const error = new Error("This field is required");
+    const error = new Error("Email and password are required");
     error.name = "ValidatorError";
     return res.status(400).send({ message: error.message });
   }
@@ -65,7 +67,7 @@ const login = (req, res) => {
         expiresIn: "7d",
       });
 
-      return res.send({ token });
+      res.send({ token });
     })
     .catch((err) => checkErrors(err, res));
 };
@@ -76,11 +78,11 @@ const getCurrentUser = (req, res) => {
 
   User.findById(userId)
     .orFail()
-    .then((user) => {
-      return res.send({
+    .then((user) =>
+      res.send({
         user: { name: user.name, avatar: user.avatar, email: user.email },
-      });
-    })
+      })
+    )
     .catch((err) => {
       console.error(err);
       res
@@ -103,7 +105,7 @@ const modifyUserData = (req, res) => {
       if (!user) {
         return Promise.reject(new Error("User not found"));
       }
-      return res.send({ user: { name: user.name, avatar: user.avatar } });
+      res.send({ user: { name: user.name, avatar: user.avatar } });
     })
     .catch((err) => checkErrors(err, res));
 };
