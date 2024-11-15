@@ -35,7 +35,7 @@ const DUPLICATE_REQUEST = 409;
 const REQUIRED_FIELD = 400;
 const SERVER_ERROR = 500;
 const NOT_FOUND = 404;
-const UNAUTHORIZED_ERROR = 401;
+const UNAUTHORIZED_ERROR = 403;
 
 module.exports = {
   checkErrors,
