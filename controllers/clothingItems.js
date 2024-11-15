@@ -22,14 +22,19 @@ const getClothingItems = (req, res) => {
 // deletes item
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItem.findByIdAndRemove(itemId)
-    .orFail(() => {
-      const error = new Error("Item ID not found");
-      error.statusCode = 404;
-      throw error;
-    })
-    .then((item) => res.send({ item }))
+  const userId = req.user._id;
 
+  ClothingItem.findById(itemId)
+    .orFail()
+    .then((item) => {
+      if (item.owner.toString() !== userId) {
+        const error = new Error("Not authorized to delete item");
+        error.statusCode = 403;
+        throw error;
+      }
+      return ClothingItem.findByIdAndRemove(itemId);
+    })
+    .then(() => res.status(200).send({ message: "Item deleted successfully" }))
     .catch((err) => checkErrors(err, res));
 };
 

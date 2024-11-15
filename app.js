@@ -1,9 +1,11 @@
 const express = require("express");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 
+app.use(cors());
 app.use(helmet());
 
 const indexRouter = require("./routes/index");
@@ -18,14 +20,7 @@ mongoose.connect(
 
 app.use(express.json());
 
-const authMiddleware = (req, res, next) => {
-  req.user = {
-    _id: "672fcf0e8e1c364372526e91",
-  };
-  next();
-};
-
-app.use("/", authMiddleware, indexRouter);
+app.use("/", indexRouter);
 
 const { PORT = 3001 } = process.env;
 
