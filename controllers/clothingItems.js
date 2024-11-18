@@ -19,7 +19,7 @@ const createClothingItem = (req, res) => {
 // reads all items
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.send({ data: items }))
+    .then((items) => res.send(items))
     .catch((err) => checkErrors(err, res));
 };
 
