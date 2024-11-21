@@ -15,7 +15,9 @@ const createUser = (req, res) => {
   if (!email || !password) {
     const error = new Error("Email and password are required");
     error.statusCode = REQUIRED_FIELD;
-    return res.status(REQUIRED_FIELD).send({ message: error.message });
+    return res
+      .status(REQUIRED_FIELD)
+      .send({ message: "Email or password not valid" });
   }
 
   return User.findOne({ email })
@@ -29,11 +31,15 @@ const createUser = (req, res) => {
       return bcrypt.hash(password, 10);
     })
     .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then((user) =>
-      res.send({
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+     return res.status(200).send({
+        token,
         user: { name: user.name, avatar: user.avatar, email: user.email },
-      })
-    )
+      });
+    })
     .catch((err) => checkErrors(err, res));
 };
 
@@ -53,7 +59,10 @@ const login = (req, res) => {
         expiresIn: "7d",
       });
 
-      res.send({ token });
+      res.send({
+        token,
+        user: { name: user.name, avatar: user.avatar, email: user.email },
+      });
     })
     .catch((err) => checkErrors(err, res));
 };
