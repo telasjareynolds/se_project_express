@@ -28,15 +28,8 @@ const createUser = (req, res, next) => {
       return bcrypt.hash(password, 10);
     })
     .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: "7d",
-      });
-
-      return res.status(SUCCESSFUL_REQUEST).send({
-        token,
-        user: { name: user.name, avatar: user.avatar, email: user.email },
-      });
+    .then(() => {
+      return res.status(SUCCESSFUL_REQUEST).send({ message: "User created"});
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -65,7 +58,12 @@ const login = (req, res, next) => {
 
       res.send({
         token,
-        user: { name: user.name, avatar: user.avatar, email: user.email },
+        user: {
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        },
       });
     })
     .catch((err) => {
