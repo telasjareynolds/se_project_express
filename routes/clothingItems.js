@@ -9,14 +9,14 @@ const {
 const auth = require("../middlewares/auth");
 
 // CRUD
-router.post("/", auth, createClothingItem);
+router.post("/items", auth, createClothingItem);
 
-router.get("/", getClothingItems);
-
-router.delete("/:itemId", auth, deleteClothingItem);
+router.get("/items", getClothingItems);
 
 router.put("/:itemId/likes", auth, likeClothingItem);
 
 router.delete("/:itemId/likes", auth, dislikeClothingItem);
+
+router.delete("/items/:itemId", auth, deleteClothingItem);
 
 module.exports = router;

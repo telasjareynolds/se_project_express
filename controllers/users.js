@@ -1,32 +1,29 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const { SUCCESSFUL_REQUEST } = require("../utils/errors");
+
 const {
-  checkErrors,
-  DUPLICATE_REQUEST,
-  REQUIRED_FIELD,
-  SERVER_ERROR,
-} = require("../utils/errors");
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  ConflictError,
+} = require("../errors/custom-errors");
 const { JWT_SECRET } = require("../utils/config");
 
 // Creates a user
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
   if (!email || !password) {
-    const error = new Error("Email and password are required");
-    error.statusCode = REQUIRED_FIELD;
-    return res
-      .status(REQUIRED_FIELD)
-      .send({ message: "Email or password not valid" });
+    throw new BadRequestError("Email or password not valid");
   }
 
   return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
         // Email already exists, so throw an error that goes to catch
-        const error = new Error("Email already exists");
-        error.statusCode = DUPLICATE_REQUEST;
-        throw error;
+        throw new ConflictError("Email already exists");
       }
       return bcrypt.hash(password, 10);
     })
@@ -35,22 +32,29 @@ const createUser = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-     return res.status(200).send({
+
+      return res.status(SUCCESSFUL_REQUEST).send({
         token,
         user: { name: user.name, avatar: user.avatar, email: user.email },
       });
     })
-    .catch((err) => checkErrors(err, res));
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid user data"));
+      } else if (err.code === 11000) {
+        next(new ConflictError("User with this email already exists"));
+      } else {
+        next(err); // Pass other unexpected errors to the centralized error handler
+      }
+    });
 };
 
 // user login controller
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    const error = new Error("Email and password are required");
-    error.name = "ValidatorError";
-    return res.status(REQUIRED_FIELD).send({ message: error.message });
+    throw new BadRequestError("Email and password are required");
   }
 
   return User.findUserByCredentials(email, password)
@@ -64,30 +68,49 @@ const login = (req, res) => {
         user: { name: user.name, avatar: user.avatar, email: user.email },
       });
     })
-    .catch((err) => checkErrors(err, res));
+    .catch((err) => {
+      if (err.name === "UnauthorizedError") {
+        next(new UnauthorizedError("Incorrect email or password"));
+      } else if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid input data"));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // Finds user by ID
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
 
   User.findById(userId)
-    .orFail()
-    .then((user) =>
+    .orFail(() => {
+      throw new NotFoundError("Current user not found");
+    })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError("No user with matching ID found");
+      }
       res.send({
-        user: { name: user.name, avatar: user.avatar, email: user.email },
-      })
-    )
+        user: {
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        },
+      });
+    })
     .catch((err) => {
-      console.error(err);
-      res
-        .status(SERVER_ERROR)
-        .send({ message: "An error occurred while retrieving user data" });
+      if (err.name === "CastError") {
+        next(new BadRequestError("The id string is in an invalid format"));
+      } else {
+        next(err);
+      }
     });
 };
 
 // Modifies user data - updates profile
-const modifyUserData = (req, res) => {
+const modifyUserData = (req, res, next) => {
   const { name, avatar } = req.body;
   const updateData = { name, avatar };
 
@@ -95,11 +118,21 @@ const modifyUserData = (req, res) => {
     new: true,
     runValidators: true,
   })
-    .orFail()
+    .orFail(() => {
+      throw new NotFoundError("User not found");
+    })
     .then((user) =>
       res.send({ user: { name: user.name, avatar: user.avatar } })
     )
-    .catch((err) => checkErrors(err, res));
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid input data"));
+      } else if (err.name === "CastError") {
+        next(new BadRequestError("Invalid user ID format"));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = {
