@@ -6,12 +6,16 @@ const {
   modifyUserData,
 } = require("../controllers/users");
 const auth = require("../middlewares/auth");
+const {
+  validateLoginAuth,
+  validateUserCreation,
+} = require("../middlewares/validation");
 
 // create user
-router.post("/signup", createUser);
+router.post("/signup", validateUserCreation, createUser);
 
 // user login
-router.post("/signin", login);
+router.post("/signin", validateLoginAuth, login);
 
 // get logged in user
 router.get("/users/me", auth, getCurrentUser);
