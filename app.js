@@ -5,8 +5,10 @@ const cors = require("cors");
 const errorHandler = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+require('dotenv').config();
 
 const app = express();
+const { PORT = 3001 } = process.env;
 
 app.use(cors());
 app.use(helmet());
@@ -32,7 +34,6 @@ app.use(errors());
 
 app.use("/", errorHandler);
 
-const { PORT = 3001 } = process.env;
 
 app.listen(PORT, () => {
   console.log(`App listening at port ${PORT}`);

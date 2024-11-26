@@ -6,7 +6,6 @@ const { SUCCESSFUL_REQUEST } = require("../utils/errors");
 const {
   BadRequestError,
   UnauthorizedError,
-  ForbiddenError,
   NotFoundError,
   ConflictError,
 } = require("../errors/custom-errors");
