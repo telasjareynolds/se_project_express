@@ -4,7 +4,7 @@ const userRouter = require("./users");
 const clothingItemRouter = require("./clothingItems");
 
 router.use("/", userRouter);
-router.use("/", clothingItemRouter);
+router.use("/items", clothingItemRouter);
 
 router.use((req, res) => {
   const NOT_FOUND = 404;

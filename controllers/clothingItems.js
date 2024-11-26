@@ -1,19 +1,11 @@
 const ClothingItem = require("../models/clothingItem");
 
-const {
-  checkErrors,
-  NOT_FOUND,
-  UNAUTHORIZED_ERROR,
-  REQUIRED_FIELD,
-  SUCCESSFUL_REQUEST,
-} = require("../utils/errors");
+const { SUCCESSFUL_REQUEST } = require("../utils/errors");
 
 const {
   BadRequestError,
   UnauthorizedError,
-  ForbiddenError,
   NotFoundError,
-  ConflictError,
 } = require("../errors/custom-errors");
 
 // Implement CRUD
