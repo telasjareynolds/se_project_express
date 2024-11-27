@@ -14,3 +14,8 @@ Weather API Integration: The app connects to a weather API to deliver current we
 RESTful API: The backend follows REST principles, supporting CRUD operations for user and wardrobe data.
 Error Handling: Comprehensive error handling ensures smooth, reliable functionality for users.
 
+Link to front-end repo: https://github.com/telasjareynolds/se_project_react
+
+Domain name: https://projectreact.twilightparadox.com	
+	https://www.projectreact.twilightparadox.com
+

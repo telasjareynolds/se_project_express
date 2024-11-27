@@ -5,7 +5,7 @@ const cors = require("cors");
 const errorHandler = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -26,6 +26,11 @@ mongoose.connect(
 app.use(express.json());
 
 app.use(requestLogger);
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 app.use("/", indexRouter);
 
 app.use(errorLogger);
@@ -33,7 +38,6 @@ app.use(errorLogger);
 app.use(errors());
 
 app.use("/", errorHandler);
-
 
 app.listen(PORT, () => {
   console.log(`App listening at port ${PORT}`);
