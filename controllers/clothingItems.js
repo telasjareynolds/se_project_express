@@ -2,19 +2,15 @@ const ClothingItem = require("../models/clothingItem");
 
 const { SUCCESSFUL_REQUEST } = require("../utils/errors");
 
-const {
-  BadRequestError,
-  UnauthorizedError,
-  NotFoundError,
-} = require("../errors/custom-errors");
+const { BadRequestError } = require("../errors/BadRequestError");
+const { NotFoundError } = require("../errors/NotFoundError");
+const { ForbiddenError } = require("../errors/ForbiddenError");
+
 
 // Implement CRUD
 // creates item
 const createClothingItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
-  if (!req.user || !req.user._id) {
-    throw new BadRequestError("User ID is required");
-  }
 
   const owner = req.user._id;
 
@@ -50,7 +46,7 @@ const deleteClothingItem = (req, res, next) => {
     })
     .then((item) => {
       if (item.owner.toString() !== userId) {
-        throw new UnauthorizedError("Not authorized to delete item");
+        throw new ForbiddenError("Not authorized to delete item");
       }
       return ClothingItem.findByIdAndRemove(itemId);
     })
@@ -91,10 +87,6 @@ const likeClothingItem = (req, res, next) => {
     .catch((err) => {
       if (err.name === "CastError") {
         next(new BadRequestError("Id in incorrect format"));
-      } else if (err.name === "UnathorizedError") {
-        next(
-          new UnauthorizedError("User doesn't have authorization to like item")
-        );
       } else {
         next(err);
       }
@@ -118,10 +110,6 @@ const dislikeClothingItem = (req, res, next) => {
     .catch((err) => {
       if (err.name === "CastError") {
         next(new BadRequestError("Id in incorrect format"));
-      } else if (err.name === "UnathorizedError") {
-        next(
-          new UnauthorizedError("User doesn't have authorization to like item")
-        );
       } else {
         next(err);
       }

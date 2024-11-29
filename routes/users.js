@@ -9,6 +9,7 @@ const auth = require("../middlewares/auth");
 const {
   validateLoginAuth,
   validateUserCreation,
+  validateModifyUserData,
 } = require("../middlewares/validation");
 
 // create user
@@ -21,6 +22,6 @@ router.post("/signin", validateLoginAuth, login);
 router.get("/users/me", auth, getCurrentUser);
 
 // modify user's data
-router.patch("/users/me", auth, modifyUserData);
+router.patch("/users/me", auth, validateModifyUserData, modifyUserData);
 
 module.exports = router;

@@ -3,12 +3,11 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { SUCCESSFUL_REQUEST } = require("../utils/errors");
 
-const {
-  BadRequestError,
-  UnauthorizedError,
-  NotFoundError,
-  ConflictError,
-} = require("../errors/custom-errors");
+const { BadRequestError } = require("../errors/BadRequestError");
+const { UnauthorizedError } = require("../errors/UnauthorizedError");
+const { NotFoundError } = require("../errors/NotFoundError");
+const { ConflictError } = require("../errors/ConflictError");
+
 const { JWT_SECRET } = require("../utils/config");
 
 // Creates a user
@@ -19,17 +18,9 @@ const createUser = (req, res, next) => {
   }
 
   return User.findOne({ email })
-    .then((existingUser) => {
-      if (existingUser) {
-        // Email already exists, so throw an error that goes to catch
-        throw new ConflictError("Email already exists");
-      }
-      return bcrypt.hash(password, 10);
-    })
+    .then(() => bcrypt.hash(password, 10))
     .then((hash) => User.create({ name, avatar, email, password: hash }))
-    .then(() => {
-      return res.status(SUCCESSFUL_REQUEST).send({ message: "User created"});
-    })
+    .then(() => res.status(SUCCESSFUL_REQUEST).send({ message: "User created" }))
     .catch((err) => {
       if (err.name === "ValidationError") {
         next(new BadRequestError("Invalid user data"));
